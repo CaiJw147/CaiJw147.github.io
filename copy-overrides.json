@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "overrides": {
+    "text.841e21b1": {
+      "text": "The river"
+    },
+    "text.ec88b54d": {
+      "text": "GO!"
+    },
+    "text.3d0c4002": {
+      "text": "The river collects those pieces of my life into the same place. You can follow it in order, or stop wherever something catches your attention."
+    },
+    "text.e0435217": {
+      "text": "I enjoy technology, photography, writing and working with music."
+    },
+    "image.band.0": {
+      "text": "Stage lights above a music producer and guitarists."
+    },
+    "text.8f0a9e08": {
+      "text": "My place in the band is usually offstage: playing rhythm guitar, making drum demos, and working behind the camera."
+    },
+    "text.1f299f39": {
+      "text": "At some performances, I am not even on stage. I am crouched below it, photographing the people who are."
+    },
+    "text.8b619d56": {
+      "text": "The rhythm guitar coming through the speakers is the part I recorded; the photographs that become the band's visual memory are the frames I made."
+    }
+  }
+}

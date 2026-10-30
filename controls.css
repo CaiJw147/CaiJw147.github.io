@@ -1,0 +1,39 @@
+/* A shallow 2D ledge distinguishes an action from the photographs around it. */
+:root{--control-face:#e4dfd1;--control-ink:#34483f;--control-edge:#829181;--control-base:#6a7a6a;--control-light:#fff8e9;}
+#world-interface,#cover,.journey-controls,#entry-controls,#sound-controls{--control-face:#344f53;--control-ink:#f3e9d3;--control-edge:#91a294;--control-base:#172f39;--control-light:#7b9290;}
+dialog #sound-controls{--control-face:#e4dfd1;--control-ink:#34483f;--control-edge:#829181;--control-base:#6a7a6a;--control-light:#fff8e9;}
+#chapter.is-band,#photograph-viewer.is-band-view,#chapter.is-band #sound-controls{--control-face:#354649;--control-ink:#f0e8d6;--control-edge:#7b8e84;--control-base:#16282d;--control-light:#6b7e78;}
+button:not(:has(img,canvas)):not(.portal):not(.journal-cover-cluster):not(.brand):not([role='switch']),#sound-controls summary,.relief-link{
+ border:1px solid var(--control-edge);border-radius:2px;background-color:var(--control-face);color:var(--control-ink);
+ box-shadow:inset 0 1px 0 var(--control-light),0 3px 0 var(--control-base),0 4px 0 #162e3320;
+ font-family:var(--ui);cursor:pointer;transition:background-color .15s,box-shadow .1s,translate .1s;text-decoration:none;
+}
+button:not(:has(img,canvas)):not(.portal):not(.journal-cover-cluster):not(.brand):not([role='switch']):active:not(:disabled),#sound-controls summary:active,.relief-link:active{translate:0 2px;box-shadow:inset 0 1px 0 var(--control-light),0 1px 0 var(--control-base);}
+button:disabled{cursor:default;}.world-header nav button{padding:7px 10px;}.world-header nav{gap:12px;}.world-header nav button::after{bottom:-19px;}
+.view-switch{align-items:center;gap:10px;}.view-switch button{padding:6px 14px;min-height:34px;}.view-switch button.is-active{--control-face:#405e4d;--control-ink:#fff4df;--control-base:#273e34;--control-light:#738875;}
+.reader-toolbar{padding-block:9px;min-height:61px;}.text-button,.location-link,.image-back{padding:8px 12px;}.chapter-actions .paper-button{--control-face:#405e4d;--control-ink:#fff4df;--control-base:#273e34;--control-light:#738875;}
+.journal-space-zoom{gap:7px;}.journal-space-zoom button{min-height:32px;}.map-zoom{gap:5px;box-shadow:none;}.map-zoom button+button{border-top:1px solid var(--control-edge);}
+.monochrome-switch{min-height:38px;padding:3px 0;gap:10px;}.switch-track{box-sizing:border-box;position:relative;flex:0 0 46px;width:46px;height:25px;border-radius:2px;border:1px solid #788575;background:#b7beae;box-shadow:inset 0 2px 0 #65776266;}
+.switch-track::after{left:3px;top:3px;width:17px;height:17px;border-radius:1px;background:#f4edde;border:1px solid #7f8c78;box-shadow:inset 0 1px 0 #fff8e9,0 2px 0 #5b705a;transition:transform .18s;}
+.monochrome-switch[aria-checked='true'] .switch-track{background:#405e4d;border-color:#64785f;}.monochrome-switch[aria-checked='true'] .switch-track::after{transform:translateX(21px);background:#f4edde;}
+input[type='range']{appearance:none;background:transparent;cursor:pointer;}input[type='range']::-webkit-slider-runnable-track{height:6px;border:1px solid #7f8d7c;background:#b6c1ab;box-shadow:inset 0 1px 0 #62735e;}
+input[type='range']::-webkit-slider-thumb{appearance:none;width:15px;height:19px;margin-top:-7px;border:1px solid #7e8b76;border-radius:1px;background:#eee4cb;box-shadow:inset 0 1px 0 #fff8e9,0 2px 0 #566952;}
+input,textarea,select{font-family:var(--ui);border-radius:2px;}button:focus-visible,summary:focus-visible,.relief-link:focus-visible{outline:2px solid #b97e4c;outline-offset:5px;}
+#writer-link{display:inline-flex;align-items:center;padding:5px 9px;font:11px var(--ui);color:#34483f;margin:0 0 8px;}
+.is-editor-preview .private-review{display:none;}
+@media(max-width:650px){.world-header nav{gap:9px;}.world-header nav button{padding:6px 8px;min-height:34px;}.view-switch button{padding:5px 9px;}.reader-toolbar{padding-block:9px;}.strip-toolbar-actions{gap:11px;}.strip-toolbar-actions .text-button{font-size:10px;padding:7px 9px;}.monochrome-switch{font-size:10px;gap:6px;}.switch-track{flex-basis:46px;width:46px;}.monochrome-switch[aria-checked='true'] .switch-track::after{transform:translateX(21px);}.journal-space-zoom{gap:5px;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important;}}
+
+/* World wayfinding is lettering, distinct from the action controls. */
+#world-interface .world-header nav button,#world-interface .world-header nav button:active:not(:disabled){border:0;border-radius:0;background:transparent;box-shadow:none;translate:none;padding:8px 0;color:#eee9da;font:14px/1.5 'Weapon Get 2',var(--ui);letter-spacing:0;}
+#world-interface .world-header nav button.is-current{color:#ffe4a9;}
+#world-interface .world-header nav{gap:26px;}
+#cover-title,.loading-title,.brand,#ending-title{font-family:'Weapon Get 2',var(--display);font-weight:400;letter-spacing:0;}
+#cover-title{font-size:clamp(36px,5.5vw,80px);line-height:1.35;}.brand{font-size:25px;line-height:1.5;}.loading-title{font-size:clamp(32px,5vw,54px);}
+#portals .portal-label{font-family:'Weapon Get 2',var(--ui);font-size:14px;line-height:1.2;letter-spacing:0;}
+#portals .portal.has-sign .portal-label{font-size:14px;}
+#loop-bicycle{position:absolute;border:0!important;background:transparent!important;box-shadow:none!important;translate:none!important;padding:0;pointer-events:auto;}
+#loop-bicycle span{position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);white-space:nowrap;font:12px/1.6 'Weapon Get 2',var(--ui);padding:6px 9px;color:#ffe5af;background:#29464c;border:1px solid #9caa8b;}
+#loop-bicycle:hover,#loop-bicycle:focus-visible{outline:2px dashed #e5c794;outline-offset:5px;}
+#entry-controls:not([hidden]){display:flex;gap:12px;align-items:center;}#pause-loop{padding:10px 15px;min-height:44px;font:12px var(--ui);}
+@media(max-width:650px){#world-interface .world-header nav{gap:clamp(4px,1.5vw,6px);}#world-interface .world-header nav button,#world-interface .world-header nav button:active:not(:disabled){font-size:clamp(7px,2.35vw,10px);padding:7px 0;}#portals .portal-label,#portals .portal.has-sign .portal-label{font-size:12px;}.brand{font-size:22px;}#cover-title{font-size:clamp(32px,8vw,48px);}#ending-title{font-size:27px;}}

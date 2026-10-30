@@ -1,0 +1,8 @@
+@font-face{font-family:'Atlas Reading';src:url('fonts/AtlasReading.woff') format('woff');font-style:normal;font-weight:200 900;font-display:swap;}
+@font-face{font-family:'Atlas Interface';src:url('fonts/Lato-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:'Atlas Interface';src:url('fonts/Lato-Bold.ttf') format('truetype');font-style:normal;font-weight:700;font-display:swap;}
+@font-face{font-family:'Weapon Get 2';src:url('fonts/Weapon-Get-2.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap;}
+:root{--display:'Atlas Reading',serif;--text:'Atlas Reading',serif;--ui:'Atlas Interface','Atlas Reading',sans-serif;}
+button,input,textarea,select,option,summary{font-family:var(--ui);}
+.loading-title{font-family:var(--display);}#loading-screen,.private-review{font-family:var(--ui);}
+.item-title,.item-description,.current-text,.proposal{font-family:var(--text);}.item-id{font-family:var(--ui);}

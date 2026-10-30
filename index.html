@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3d5b73">
+  <title>Haoran Xu</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Photographs, music and writing by Haoran Xu. A personal journey along an imagined river.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css?v=1fec2ad6008c">
+  <link rel="stylesheet" href="content-reader.css?v=86280f3fcbf2">
+  <link rel="stylesheet" href="loading.css?v=73c5ff2677cf">
+  <link rel="stylesheet" href="river-ui.css?v=b8c8ac2a31be">
+  <link rel="stylesheet" href="fonts.css?v=0deb8370d3f6">
+  <link rel="stylesheet" href="controls.css?v=273a93ff73fb">
+  <script src="world-art.js?v=3b6cdb9cef9b" defer></script>
+  <script src="content-data.js?v=11b1f44bbf2b" defer></script>
+  <script src="copy-layer.js?v=1dc1614234b9" defer></script>
+  <script src="atlas-map.js?v=b5a40f5dee54" defer></script>
+  <script src="photography-strips.js?v=eb59f4095dfb" defer></script>
+  <script src="journal-space.js?v=b82cf59f2369" defer></script>
+  <script src="content-reader.js?v=2ff1913b55a4" defer></script>
+  <script src="asset-loader.js?v=c54ed0dbe06d" defer></script>
+  <script src="sound.js?v=84c29920f31f" defer></script>
+  <script src="main.js?v=801ecddef8ca" defer></script>
+</head>
+<body>
+  <section id="loading-screen" aria-labelledby="loading-title" aria-busy="true">
+    <h1 id="loading-title" class="loading-title">Haoran Xu</h1>
+    <canvas id="loading-character" width="224" height="224" aria-hidden="true"></canvas>
+    <p id="loading-message" role="status" aria-live="polite">Gathering the atlas</p>
+    <div class="loading-meter"><progress id="loading-progress" max="100" value="0" aria-label="Loading the river"></progress><span id="loading-percent" aria-hidden="true">0%</span></div>
+    <button id="loading-retry" hidden>Try again</button>
+  </section>
+  <main id="atlas" data-phase="cover" inert aria-hidden="true">
+    <canvas id="river" role="img" aria-label="A continuous two-dimensional Qinhuai riverfront, with pale buildings, slate roofs, and a stone embankment."></canvas>
+    <div class="atmosphere" aria-hidden="true"></div>
+
+    <section id="cover" aria-labelledby="cover-title">
+      <div class="cover-top"><span>Haoran Xu</span><span>Qinhuai River, Nanjing</span></div>
+      <div class="cover-center">
+        <h1 id="cover-title">Haoran Xu</h1>
+        <button id="play" class="play" disabled><span class="play-triangle" aria-hidden="true"></span>Play</button>
+      </div>
+      <a class="cover-shortcut" href="#work" id="cover-work">View Selected Works <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <div id="entry-controls" hidden><button id="pause-loop" hidden>Pause ride</button><button id="skip">Skip introduction <span aria-hidden="true">→</span></button></div>
+
+    <div id="world-interface" inert aria-hidden="true">
+      <header class="world-header">
+        <button class="brand" id="replay" aria-label="Haoran Xu. Return to the cover.">Haoran Xu</button>
+        <nav aria-label="Main sections">
+          <button data-section="story">About</button>
+          <button data-section="work">Photography</button>
+          <button data-section="music">Band</button>
+          <button data-section="notes">Journal</button>
+          <button data-section="places" class="places-link">Places</button>
+        </nav>
+      </header>
+
+
+
+      <div id="portals" aria-label="Riverside destinations"></div>
+      <div id="about-entrance" hidden>
+        <button id="about-photo" aria-label="Meet Haoran Xu. Get inside About"><img src="media/about-haoran-shoulder.webp" width="6000" height="4000" alt="Haoran Xu in glasses and a navy jacket."><span>Haoran Xu</span></button>
+        <button id="get-inside">Get inside <span aria-hidden="true">↙</span></button>
+      </div>
+      <button id="board-ferry" hidden>Board the ferry <span aria-hidden="true">↗</span></button>
+      <button id="loop-bicycle" hidden aria-label="Ride the bicycle and return to the beginning"><span>Ride again</span></button>
+      <div class="next-destination"><button id="world-next">Next <span aria-hidden="true">→</span></button><span class="explore-hint">Drag the river · Choose a destination</span></div>
+      <footer class="world-footer">
+        <div class="river-controls" aria-label="Switch sections">
+          <button id="pan-left" aria-label="Previous section">←</button>
+          <span id="location">Along the Qinhuai</span>
+          <button id="pan-right" aria-label="Next section">→</button>
+        </div>
+
+      </footer>
+      <div id="journey-controls" class="journey-controls" aria-label="Journey controls" hidden>
+        <span id="journey-message"></span>
+        <div class="journey-buttons">
+          <button id="pause-visit">Pause</button>
+          <button id="skip-visit">Skip travel</button>
+          <button id="resume-journey" hidden>Resume Journey</button>
+          <button id="leave-journey">Explore freely</button>
+        </div>
+      </div>
+    </div>
+
+    <dialog id="chapter" aria-labelledby="chapter-title">
+      <div class="reader-heading">
+      <button id="close-chapter" class="close" aria-label="Close chapter and return to the same river position">×</button>
+      <span class="chapter-place" id="chapter-place"></span>
+      <h2 id="chapter-title"></h2>
+      </div>
+      <p id="chapter-description"></p>
+      <p class="empty-note" id="chapter-empty"></p>
+      <div id="content-stage" hidden></div>
+      <div class="chapter-actions">
+        <button id="continue-journey" class="paper-button">Next</button>
+      </div>
+    </dialog>
+    <dialog id="journal-post" aria-labelledby="journal-post-title">
+      <header class="journal-post-top"><h3 id="journal-post-title">Journal</h3><span id="journal-intro-hint" hidden>Press any key or tap to explore Journal</span><button id="close-journal-post" aria-label="Close post">×</button></header>
+      <div id="journal-post-content"></div>
+    </dialog>
+    <dialog id="photograph-viewer" aria-label="Photograph">
+      <button id="close-photograph" class="image-back" aria-label="Close photograph">×</button>
+      <div class="exhibition-layout"><div class="exhibition-stage"><button id="neighbor-previous" class="neighbor-preview previous-preview" aria-label="Preview previous photograph"><img alt=""></button><img id="expanded-photograph" alt=""><button id="neighbor-next" class="neighbor-preview next-preview" aria-label="Preview next photograph"><img alt=""></button></div><aside id="photograph-sidebar"></aside></div>
+      <div id="album-thumbnails" class="album-thumbnails" aria-label="Photographs in this album" hidden></div>
+      <div class="image-controls"><button id="image-previous" aria-label="Previous photograph">←</button><span id="image-position"></span><button id="image-next" aria-label="Next photograph">→</button></div>
+    </dialog>
+    <dialog id="ending" aria-labelledby="ending-title">
+      <p class="ending-kicker">Haoran Xu</p>
+      <h2 id="ending-title">Thank you.<br>See you by the river.</h2>
+      <p id="ending-copy">There is always another way of seeing.</p>
+      <div class="ending-actions"><button id="ending-replay">Ride again</button><button id="ending-explore">Keep Exploring</button><button id="ending-work">Revisit the photographs</button></div>
+      <p class="ending-credit">Photographs, writing & music by Haoran Xu.<br>An imagined river, made for wandering.</p>
+    </dialog>
+    <p id="status" class="screen-reader" role="status" aria-live="polite"></p>
+    <noscript><p class="no-script">Please enable JavaScript to enter the river.</p></noscript>
+  </main>
+</body>
+</html>

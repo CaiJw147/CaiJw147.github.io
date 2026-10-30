@@ -1,0 +1,149 @@
+:root {
+  color-scheme: dark;
+  --sky: #3d5b73;
+  --river: #263f4c;
+  --ivory: #f2ead9;
+  --muted: #d3d8d2;
+  --amber: #d7ae76;
+  --paper: #efe9df;
+  --ink: #353431;
+  --display: 'Atlas Reading', serif;
+  --text: var(--display);
+  --ui: 'Atlas Interface', 'Atlas Reading', sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; }
+body { background: var(--sky); color: var(--ivory); font-family: var(--text); }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; cursor: pointer; }
+button:disabled { cursor: wait; opacity: .55; }
+button:focus-visible, a:focus-visible { outline: 2px solid #f7d39d; outline-offset: 6px; }
+[hidden] { display: none !important; }
+#atlas { position: relative; isolation: isolate; height: 100dvh; min-height: 480px; overflow: hidden; }
+#river { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; touch-action: pan-y; }
+.atmosphere { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #142b3b30 0%, transparent 65%, #0e29354a 100%); }
+#cover { position: absolute; inset: 0; z-index: 4; background: linear-gradient(180deg, #182f3d3d, transparent 56%); opacity: 1; transition: opacity .65s ease; }
+.cover-top { position: absolute; top: 34px; left: 4.5%; right: 4.5%; display: flex; justify-content: space-between; font: 13px var(--ui); color: #e5e6dc; }
+.cover-center { position: absolute; inset: 9.5% 20px auto; text-align: center; }
+#cover-title { margin: 0; font: 400 clamp(66px, 7.8vw, 116px)/.99 var(--display); letter-spacing: -.035em; word-spacing: .08em; text-shadow: 0 3px 20px #152d3d2b; }
+#cover-title span { display: block; }
+.play { margin-top: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-width: 146px; padding: 13px 26px 15px; border: 1px solid #e1ba7b; background: #d1a26a; color: #253b43; box-shadow: 0 4px 0 #705d45, inset 0 1px #f3d2a0; font: 600 21px var(--ui); transition: background .15s, transform .15s; }
+.play:hover { background: #e8bd83; transform: translateY(-1px); }
+.play:active { transform: translateY(3px); box-shadow: 0 1px 0 #705d45; }
+.play-triangle { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid currentColor; }
+.cover-shortcut { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); color: var(--ivory); font: 14px var(--ui); text-underline-offset: 6px; text-decoration-color: #f2ead970; white-space: nowrap; }
+.cover-shortcut:hover { text-decoration-color: var(--ivory); }
+.cover-shortcut span { display: inline-block; margin-left: 9px; }
+#atlas[data-phase="entering"] #cover { opacity: 0; pointer-events: none; }
+#atlas[data-phase="explore"] #cover { visibility: hidden; opacity: 0; pointer-events: none; }
+#entry-controls { position: absolute; bottom: 35px; right: 4.5%; z-index: 5; }
+#skip { color: var(--ivory); font: 13px var(--ui); background: #1c3540d9; border: 1px solid #cbd4ca80; padding: 11px 14px; }
+#skip span { margin-left: 15px; }
+#world-interface { position: absolute; inset: 0; z-index: 3; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .65s ease; }
+#atlas[data-phase="explore"] #world-interface { visibility: visible; opacity: 1; }
+.world-header { position: absolute; top: 0; left: 0; right: 0; padding: 27px 4.5%; display: flex; justify-content: space-between; gap: 25px; align-items: center; }
+.brand { font: 19px var(--display); letter-spacing: -.025em; border: 0; padding: 0; color: var(--ivory); background: none; white-space: nowrap; }
+.world-header nav { display: flex; align-items: center; gap: clamp(17px, 2vw, 32px); }
+.world-header nav button { border: 0; padding: 7px 0; color: var(--ivory); background: none; font: 13px var(--ui); }
+.world-header nav button:hover { color: #ffe0a9; }
+.world-header nav .places-link { border-left: 1px solid #c9d2cd55; padding-left: 22px; }
+.world-header button, .world-footer button, #introduction button { pointer-events: auto; }
+#introduction { position: absolute; top: 13.5%; left: 6.5%; width: min(565px, 44%); transition: opacity .25s ease; }
+#introduction.dismissed { visibility: hidden; opacity: 0; pointer-events: none; }
+#introduction p { margin: 0 0 13px; max-width: 55ch; font: 17px/1.5 var(--text); color: #e3e6df; text-wrap: pretty; }
+#introduction .first-line { font-size: 25px; line-height: 1.3; color: var(--ivory); letter-spacing: -.02em; margin-bottom: 17px; }
+.intro-actions { display: flex; align-items: center; gap: 27px; padding-top: 8px; }
+.quiet-action { border: 0; border-bottom: 1px solid #d3d8d277; padding: 5px 0; background: none; color: var(--ivory); font: 12px var(--ui); text-align: left; }
+.quiet-action span { margin-left: 8px; }
+.quiet-action:hover { border-color: var(--ivory); }
+#portals { position: absolute; inset: 0; pointer-events: none; }
+.portal { position: absolute; border: 1px solid transparent; background: none; pointer-events: auto; padding: 0; border-radius: 2px; }
+.portal:hover, .portal:focus-visible { border-color: #edc996a6; background: #edc99609; }
+.portal[hidden] { display: none; }
+.portal-label { position: absolute; top: -32px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 12px var(--ui); padding: 7px 11px; color: var(--ivory); background: #203b46ed; border: 1px solid #d4c5a975; opacity: 0; }
+.portal:hover .portal-label, .portal:focus-visible .portal-label { opacity: 1; }
+.world-footer { position: absolute; bottom: 25px; left: 4.5%; right: 4.5%; display: flex; align-items: center; justify-content: space-between; gap: 22px; font: 11px var(--ui); }
+.river-controls { display: flex; align-items: center; gap: 13px; min-width: 210px; }
+.river-controls button { color: var(--ivory); border: 1px solid #d3d8d259; background: #263f4c85; height: 36px; width: 36px; font: 17px var(--ui); }
+.river-controls button:hover { background: #4b6370; }
+#location { color: #e0e2d8; min-width: 112px; text-align: center; }
+.explore-hint { color: #d2d9d1; }
+#atlas[data-phase="explore"] #river { cursor: grab; }
+#atlas.dragging #river { cursor: grabbing; }
+#atlas.dragging .portal { pointer-events: none; }
+dialog { width: min(690px, calc(100% - 32px)); color-scheme: light; background: var(--paper); color: var(--ink); border: 1px solid #fcf6e9; padding: 62px 58px 48px; box-shadow: 0 20px 80px #10252f77; }
+dialog[open] { animation: paper-arrive .4s ease-out; transition: opacity .4s ease, transform .4s ease; }
+dialog.is-closing { animation: none; opacity: 0; transform: translateY(14px); }
+@keyframes paper-arrive { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+dialog::backdrop { background: #122d3bb5; }
+dialog.is-closing::backdrop { background: transparent; transition: background .4s; }
+dialog h2 { font: 400 clamp(36px, 5vw, 55px)/1.1 var(--display); letter-spacing: -.04em; margin: 19px 0 22px; }
+dialog p { font: 18px/1.65 var(--text); }
+.chapter-place { font: 12px var(--ui); color: #68746d; }
+.empty-note { font: 13px/1.6 var(--ui); color: #74786e; margin: 26px 0 36px; }
+.close { position: absolute; top: 15px; right: 19px; background: transparent; color: var(--ink); border: 0; padding: 4px 8px; font: 28px var(--ui); }
+.chapter-actions { display: flex; flex-wrap: wrap; gap: 15px; }
+.paper-button { border: 1px solid #9caa9f; padding: 12px 16px; background: transparent; color: #394a43; font: 13px var(--ui); }
+.paper-button:hover { background: #e0e0d4; }
+.chapter-actions .paper-button:last-child:not([hidden]) { background: #394f48; color: #f3ebdd; border-color: #394f48; }
+.journey-controls { position: absolute; bottom: 23px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; padding: 9px 12px; border: 1px solid #b8c4b86b; background: #203a46ed; color: var(--ivory); font: 11px var(--ui); pointer-events: auto; white-space: nowrap; }
+.journey-buttons { display: flex; gap: 7px; }
+.journey-buttons button { padding: 7px 9px; background: transparent; color: var(--ivory); border: 1px solid #c9d2c66b; font: 11px var(--ui); min-height: 32px; }
+.journey-buttons button:hover { background: #466259; }
+#atlas[data-journey="active"] .explore-hint, #atlas[data-journey="paused"] .explore-hint { visibility: hidden; }
+.portal.at-destination { border-color: #edc996c4; background: #edc9960d; }
+.screen-reader { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.no-script { position: absolute; inset: auto 20px 80px; text-align: center; background: #263f4c; padding: 20px; }
+@media (min-width: 1700px) { .cover-center { top: 9%; } #cover-title { font-size: 124px; } }
+@media (max-width: 850px) {
+  .world-header { align-items: flex-start; flex-direction: column; gap: 12px; padding: 20px 24px; }
+  .world-header nav { gap: 18px; flex-wrap: wrap; }
+  .world-header nav button { font-size: 12px; }
+  .world-header nav .places-link { padding-left: 15px; }
+  #introduction { left: 24px; top: 16%; width: min(540px, calc(100% - 48px)); }
+  .explore-hint { display: none; }
+}
+@media (max-width: 600px) {
+  .cover-top { top: 23px; left: 23px; right: 23px; font-size: 11px; }
+  .cover-center { top: 14%; }
+  #cover-title { font-size: clamp(62px, 18vw, 91px); }
+  .play { margin-top: 31px; min-width: 130px; font-size: 19px; }
+  .cover-shortcut { bottom: 27px; font-size: 12px; }
+  .world-header { padding: 19px 23px; gap: 8px; }
+  .brand { font-size: 19px; }
+  .world-header nav { gap: 14px; }
+  .world-header nav button { font-size: 11px; padding: 5px 0; }
+  .world-header nav .places-link { padding-left: 12px; }
+  #introduction { top: 116px; left: 24px; width: calc(100% - 48px); }
+  #introduction p { font-size: 14px; line-height: 1.45; margin-bottom: 12px; }
+  #introduction .first-line { font-size: 21px; line-height: 1.25; margin-bottom: 13px; }
+  .intro-actions { padding-top: 2px; gap: 23px; }
+  .intro-actions button { font-size: 11px; min-height: 36px; }
+  .world-footer { bottom: 21px; left: 20px; right: 20px; gap: 10px; flex-wrap: wrap; }
+  .river-controls { min-width: 0; gap: 7px; }
+  #location { min-width: 98px; font-size: 10px; }
+  .world-footer > button { font-size: 10px; }
+  dialog { padding: 55px 29px 35px; }
+  dialog p { font-size: 16px; }
+  .journey-controls { bottom: 73px; left: 20px; right: 20px; transform: none; flex-wrap: wrap; gap: 8px; white-space: normal; }
+  .journey-buttons { flex-wrap: wrap; }
+  .journey-buttons button { min-height: 44px; }
+}
+@media (max-height: 650px) and (min-width: 700px) {
+  .cover-center { top: 8%; }
+  #cover-title { font-size: 68px; }
+  .play { margin-top: 20px; padding: 9px 23px; font-size: 17px; }
+  #introduction { top: 17%; width: min(570px, 60%); }
+  #introduction p { font-size: 14px; margin-bottom: 9px; }
+  #introduction .first-line { font-size: 21px; }
+}
+@media (max-height: 720px) and (max-width: 600px) {
+  .cover-center { top: 12%; }
+  #cover-title { font-size: clamp(56px, 16vw, 76px); }
+  .play { margin-top: 23px; padding: 10px 23px; font-size: 17px; }
+  #introduction { top: 105px; }
+  #introduction p { font-size: 13px; line-height: 1.4; margin-bottom: 10px; }
+  #introduction .first-line { font-size: 19px; line-height: 1.25; margin-bottom: 12px; }
+  .intro-actions { gap: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }

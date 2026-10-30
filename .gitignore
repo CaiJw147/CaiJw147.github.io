@@ -1,0 +1,9 @@
+.env
+.env.*
+.DS_Store
+Thumbs.db
+write.html
+writer.*
+copy-review.*
+review-catalog.json
+private-imports/
