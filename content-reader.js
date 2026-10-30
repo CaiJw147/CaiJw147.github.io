@@ -34,6 +34,7 @@
   let thumbnailAlbum = null;
   let expanded = null;
   let journalIntro = false;
+  let postPointer = null;
   let journalVisit = 0;
   const $ = id => document.getElementById(id);
   function node(tag, className, text) {
@@ -310,6 +311,7 @@
     viewport.append(node('span', 'journal-space-hint', 'Drag to explore · Scroll to zoom'));
   }
   function openPost(entry, index = 0) {
+    postPointer = null;
     state.post = entry.id;
     state.postImages.set(entry.id, index); renderPost();
     if (!$('journal-post').open) $('journal-post').showModal();
@@ -340,9 +342,24 @@
     if(event.target.closest('#sound-controls')||event.target.matches('input,textarea,select'))return;
     event.preventDefault(); event.stopImmediatePropagation(); closePost();
   }, true);
+  $('journal-post').addEventListener('pointerdown', event => {
+    postPointer = { id: event.pointerId, x: event.clientX, y: event.clientY, moved: false };
+  }, { passive: true });
+  $('journal-post').addEventListener('pointermove', event => {
+    if (postPointer?.id === event.pointerId && Math.hypot(event.clientX - postPointer.x, event.clientY - postPointer.y) > 8) postPointer.moved = true;
+  }, { passive: true });
+  $('journal-post').addEventListener('pointercancel', () => { if (postPointer) postPointer.moved = true; });
   $('journal-post').addEventListener('click', event => {
-    if (!journalIntro) return;
-    if(event.target.closest('#sound-controls'))return;
+    if (!$('journal-post').open || $('photograph-viewer').open) return;
+    const target = event.target instanceof Element ? event.target : event.target.parentElement;
+    if (!target || target.closest('#sound-controls')) return;
+    if (!journalIntro) {
+      if (event.defaultPrevented || target.closest('button,a,input,textarea,select,[role="button"]')) return;
+      if (postPointer?.moved) return;
+      const selection = window.getSelection();
+      if (selection && !selection.isCollapsed && $('journal-post').contains(selection.anchorNode)) return;
+    }
+    postPointer = null;
     event.preventDefault(); event.stopImmediatePropagation(); closePost();
   }, true);
   function renderPost() {
