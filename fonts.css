@@ -1,4 +1,6 @@
 @font-face{font-family:'Atlas Reading';src:url('fonts/AtlasReading.woff') format('woff');font-style:normal;font-weight:200 900;font-display:swap;}
+@font-face{font-family:'Source Serif 4';src:url('fonts/SourceSerif4Variable-Roman.ttf.woff2') format('woff2');font-style:normal;font-weight:200 900;font-display:swap;}
+@font-face{font-family:'Source Serif 4';src:url('fonts/SourceSerif4Variable-Italic.ttf.woff2') format('woff2');font-style:italic;font-weight:200 900;font-display:swap;}
 @font-face{font-family:'Atlas Interface';src:url('fonts/Lato-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap;}
 @font-face{font-family:'Atlas Interface';src:url('fonts/Lato-Bold.ttf') format('truetype');font-style:normal;font-weight:700;font-display:swap;}
 @font-face{font-family:'Weapon Get 2';src:url('fonts/Weapon-Get-2.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap;}
@@ -6,3 +8,21 @@
 button,input,textarea,select,option,summary{font-family:var(--ui);}
 .loading-title{font-family:var(--display);}#loading-screen,.private-review{font-family:var(--ui);}
 .item-title,.item-description,.current-text,.proposal{font-family:var(--text);}.item-id{font-family:var(--ui);}
+
+/* Reading surfaces share the English family; Chinese keeps the original font.
+   Interface controls and the river's display lettering retain their own roles. */
+:is(#chapter,#journal-post,#photograph-viewer){
+  --display:'Source Serif 4','Atlas Reading',serif;
+  --text:var(--display);
+  font-family:var(--text);
+  font-optical-sizing:auto;
+}
+:is(#chapter,#journal-post,#photograph-viewer) :is(
+  .chapter-place,.empty-note,.small-note,.about-figure figcaption,
+  .band-position,.band-recording-figure figcaption,.audio-note p,
+  .entry-date,.reading-language,.entry-like-count,.people-label,.people-more,.person-name,
+  .journal-preview-likes,.photo-section-label,.map-photo-summary p,
+  .place-story-figure figcaption,.place-story-context,.place-story-result,.place-story-source,
+  .places-map-note,.cycling-metric-note
+){font-family:var(--text);}
+#photograph-sidebar h3{font-family:var(--text);}
