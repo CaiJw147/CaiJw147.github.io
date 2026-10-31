@@ -6,28 +6,12 @@
   const photos = data.photographs;
   const albums = data.albums.map(album => ({ ...album, images: album.photos.map(id => photos.find(photo => photo.id === id)) }));
   const albumByPhoto = new Map(albums.flatMap(album => album.photos.map(id => [id, album])));
-  const storageKey = 'atlas-location-review-v1';
-  const presets = {
-    nanjing: { label: 'Nanjing', coordinates: [32.0603, 118.7969], precision: 'city', zoom: 10 },
-    gaochun: { label: 'Gaochun, Nanjing', coordinates: [31.3271, 118.8921], precision: 'area', zoom: 11 },
-    macau: { label: 'Macau', coordinates: [22.1987, 113.5439], precision: 'city', zoom: 12 }
-  };
   const state = {
-    section: null, photographyView: 'gallery', photo: 0,
-    post: null, postImages: new Map(), reviewOpen: false, draft: null,
-    mapView: null, placesMapView: null, cluster: null, scrolls: new Map(), locations: {},
+    section: null, photo: 0,
+    post: null, postImages: new Map(),
+    placesMapView: null, scrolls: new Map(),
     barPositions: [], barsPaused: false, barsMonochrome: true
   };
-  try {
-    const stored = JSON.parse(localStorage.getItem(storageKey) || '{}');
-    photos.forEach(photo => {
-      const item = stored[photo.id];
-      if (item && typeof item.label === 'string' && Array.isArray(item.coordinates) &&
-          item.coordinates.length === 2 && item.coordinates.every(Number.isFinite) &&
-          Math.abs(item.coordinates[0]) <= 85 && Math.abs(item.coordinates[1]) <= 180 &&
-          ['city', 'area', 'public-place'].includes(item.precision)) state.locations[photo.id] = item;
-    });
-  } catch { /* A blocked browser store leaves the study usable without persistence. */ }
   let map = null;
   let strips = null;
   let journalSpace = null;
@@ -92,7 +76,7 @@
   }
   function disposeMap() {
     if (!map) return;
-    state[map.kind === 'places' ? 'placesMapView' : 'mapView'] = { center: [...map.center], zoom: map.zoom };
+    state.placesMapView = { center: [...map.center], zoom: map.zoom };
     map.destroy();
     map = null;
   }
@@ -104,23 +88,9 @@
     const text = state.section === 'notes' ? 'A field of moments, kept in words and photographs.' : 'Photographs gathered along the way. Follow an image, or enter an album.';
     space.append(node('p', '', text)); stage.append(space);
   }
-  function setGalleryView(view) {
-    state.photographyView = view;
-    render();
-  }
   function galleryToolbar() {
     const bar = toolbar();
-    const tabs = node('div', 'view-switch');
-    tabs.setAttribute('aria-label', 'Photography view');
-    ['Gallery', 'Map'].forEach(label => {
-      const view = label.toLowerCase();
-      const tab = button(label, state.photographyView === view ? 'is-active' : '', () => setGalleryView(view));
-      tab.setAttribute('aria-pressed', String(state.photographyView === view));
-      tabs.append(tab);
-    });
-    if (state.section === 'places') bar.append(node('span', 'small-note', 'Photographs and their places'));
-    else bar.append(tabs);
-    if (state.section === 'work' && state.photographyView === 'gallery') {
+    bar.append(node('span', 'small-note', 'Gallery'));
       const actions = node('div', 'strip-toolbar-actions');
       const monochrome = button('', 'monochrome-switch', () => {
         state.barsMonochrome = !state.barsMonochrome;
@@ -136,7 +106,6 @@
         pause.textContent = state.barsPaused ? 'Play motion' : 'Pause motion'; pause.setAttribute('aria-pressed', String(state.barsPaused));
       });
       pause.disabled = reduced; pause.setAttribute('aria-pressed', String(state.barsPaused)); actions.append(pause); bar.append(actions);
-    }
   }
   function renderGallery() {
     descriptionSpace();
@@ -172,131 +141,6 @@
       });
       sequences.append(grid); page.append(sequences);
     }
-  }
-  function mappedPhotos() {
-    return photos.filter(photo => state.locations[photo.id]).map(photo => ({ ...photo, ...state.locations[photo.id] }));
-  }
-  function syncMap() { map?.setData(mappedPhotos(), photos[state.photo].id, state.draft?.coordinates, state.reviewOpen); }
-  function persistLocations() {
-    try { localStorage.setItem(storageKey, JSON.stringify(state.locations)); return true; }
-    catch { return false; }
-  }
-  function exportLocations() {
-    const payload = { version: 1, locations: Object.entries(state.locations).map(([photograph, value]) => ({ photograph, ...value })) };
-    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
-    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'atlas-location-review.json'; anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-  function renderMap() {
-    if (state.section === 'work') descriptionSpace();
-    galleryToolbar();
-    const layout = node('div', 'photography-map-layout' + (state.reviewOpen ? ' is-reviewing' : ''));
-    const viewport = node('div', 'photography-map');
-    const side = node('aside', 'map-sidebar');
-    const photo = photos[state.photo];
-    const saved = state.locations[photo.id];
-    const imageButton = button('', 'map-selected-photo', () => expandPortfolio(state.photo, 'map'), 'Enlarge selected photograph');
-    imageButton.append(picture(photo, `Photograph ${state.photo + 1}`, true));
-    side.append(imageButton);
-    const summary = node('div', 'map-photo-summary');
-    summary.append(node('h3', '', saved ? saved.label : 'Not placed yet'));
-    summary.append(node('p', 'small-note', saved ? `${saved.precision === 'public-place' ? 'Public place' : saved.precision === 'city' ? 'City' : 'Area'}` : 'A location has not been added for this photograph.'));
-    side.append(summary);
-    if (false) { // Location editing stays in the local study.
-      const form = node('form', 'location-form');
-      const presetLabel = node('label', '', 'Start with a place');
-      const preset = node('select'); preset.id = 'location-preset';
-      preset.append(new Option('Choose a place…', ''));
-      Object.entries(presets).forEach(([key, value]) => preset.append(new Option(value.label, key)));
-      presetLabel.append(preset); form.append(presetLabel);
-      const nameLabel = node('label', '', 'Display name');
-      const name = node('input'); name.id = 'location-name'; name.type = 'text'; name.maxLength = 100;
-      name.placeholder = 'City, area, or public landmark'; name.value = saved?.label || '';
-      nameLabel.append(name); form.append(nameLabel);
-      const precisionLabel = node('label', '', 'Location detail');
-      const precision = node('select'); precision.id = 'location-precision';
-      [['city', 'City'], ['area', 'Area'], ['public-place', 'Public place']].forEach(([key, label]) => precision.append(new Option(label, key)));
-      precision.value = saved?.precision || 'city'; precisionLabel.append(precision); form.append(precisionLabel);
-      const help = node('p', 'location-help', saved ? 'This location is confirmed. Choose a new place to change it.' : 'Choose a place above, or click the map, then confirm.');
-      help.id = 'location-help'; form.append(help);
-      const actions = node('div', 'location-actions');
-      const confirm = button(saved ? 'Save location' : 'Confirm location', 'solid-button', () => {});
-      confirm.type = 'submit'; confirm.id = 'confirm-location'; confirm.disabled = !saved;
-      actions.append(confirm);
-      if (saved) actions.append(button('Remove', 'text-button', () => {
-        delete state.locations[photo.id]; state.draft = null; persistLocations(); render(); announce('Location removed.');
-      }));
-      form.append(actions);
-      const setDraft = coordinates => {
-        state.draft = { coordinates };
-        help.textContent = 'Proposed location. It will appear with the photograph after you confirm.';
-        confirm.disabled = !name.value.trim(); syncMap();
-      };
-      preset.addEventListener('change', () => {
-        const value = presets[preset.value];
-        if (!value) return;
-        name.value = value.label; precision.value = value.precision;
-        setDraft(value.coordinates); map.setView(value.coordinates, value.zoom);
-      });
-      name.addEventListener('input', () => { confirm.disabled = !((state.draft || saved) && name.value.trim()); });
-      form.addEventListener('submit', event => {
-        event.preventDefault();
-        const coordinates = state.draft?.coordinates || saved?.coordinates;
-        if (!coordinates || !name.value.trim()) return;
-        state.locations[photo.id] = { label: name.value.trim(), coordinates: [...coordinates], precision: precision.value, confirmed: true };
-        state.draft = null;
-        const persisted = persistLocations();
-        render();
-        const message = stage.querySelector('.location-help');
-        if (message) message.textContent = persisted ? 'Location saved in this browser. Export the review to keep a separate copy.' : 'Location kept for this session. Export the review to keep a copy.';
-        announce('Location confirmed.');
-      });
-      side.append(form);
-      if (photo.suggestion && !saved) {
-        const suggested = presets[photo.suggestion];
-        const suggestion = button(`Review suggestion: ${suggested.label}`, 'suggestion-button', () => {
-          preset.value = photo.suggestion; preset.dispatchEvent(new Event('change'));
-        });
-        side.append(suggestion, node('p', 'small-note', 'Suggested from the original caption; not yet confirmed.'));
-      }
-      const nextUnplaced = button('Next unplaced photograph', 'text-button next-unplaced', () => {
-        const index = photos.findIndex((item, index) => index > state.photo && !state.locations[item.id]);
-        const fallback = photos.findIndex(item => !state.locations[item.id]);
-        state.photo = index >= 0 ? index : Math.max(0, fallback); state.draft = null; render();
-      });
-      side.append(nextUnplaced);
-      const footer = node('div', 'review-export');
-      footer.append(button('Export location review', 'text-button', exportLocations));
-      footer.append(node('p', 'small-note', 'Your confirmations stay in this browser and do not change the source archive.'));
-      side.append(footer);
-      viewport.dataset.pickable = 'true';
-      viewport._setDraft = setDraft;
-    }
-    layout.append(viewport, side);
-    stage.append(layout);
-    map = new window.AtlasMap(viewport, {
-      onPick: coordinates => viewport._setDraft?.(coordinates),
-      onSelect: ids => { state.photo = photos.findIndex(item => item.id === ids[0]); state.cluster = ids; state.draft = null; render(); }
-    });
-    if (state.mapView) map.setView(state.mapView.center, state.mapView.zoom);
-    else if (saved) map.setView(saved.coordinates, saved.precision === 'city' ? 10 : 13);
-    syncMap();
-    const strip = node('div', 'map-photo-strip');
-    strip.setAttribute('aria-label', 'Choose a photograph to locate');
-    const items = state.cluster ? photos.filter(item => state.cluster.includes(item.id)) : photos;
-    items.forEach(item => {
-      const index = photos.indexOf(item);
-      const thumb = button('', 'map-strip-item' + (index === state.photo ? ' is-selected' : ''), () => {
-        state.photo = index; state.draft = null;
-        const location = state.locations[item.id];
-        if (location) state.mapView = { center: location.coordinates, zoom: map.zoom };
-        render();
-      }, `Review photograph ${index + 1}${state.locations[item.id] ? ', location confirmed' : ', not placed'}`);
-      thumb.append(picture(item, '', index < 6));
-      if (state.locations[item.id]) thumb.append(node('span', 'placed-indicator', '✓'));
-      strip.append(thumb);
-    });
-    stage.append(strip);
   }
   function renderJournal() {
     descriptionSpace();
@@ -503,13 +347,13 @@
     saveScroll(); disposeMap(); disposeWall(); disposeJournal(); stage.replaceChildren();
     if (state.section === 'places') renderPlaces();
     else if (state.section === 'work') {
-      if (state.photographyView === 'map') renderMap(); else renderGallery();
+      renderGallery();
     } else if (state.section === 'story') renderAbout();
     else if (state.section === 'notes') renderJournal();
     else if (state.section === 'music') renderBand();
   }
   function drawExpanded() {
-    const exhibition = expanded.origin === 'gallery' || expanded.origin === 'map';
+    const exhibition = expanded.origin === 'gallery';
     const image = expanded.images[expanded.index];
     $('photograph-viewer').classList.toggle('is-exhibition', exhibition);
     $('photograph-viewer').dataset.photo = image.id || '';
@@ -550,10 +394,11 @@
   function drawPhotographSidebar(photo, album) {
     const sidebar = $('photograph-sidebar'); sidebar.replaceChildren();
     sidebar.append(node('span', 'photo-section-label', 'Photography'), node('h2', 'photo-sidebar-title', album.title));
-    const location = node('section', 'photo-place');
-    location.append(node('h3', '', 'Location'), node('p', '', window.atlasCopy?.address('photo.' + photo.id) || state.locations[photo.id]?.label || 'Location not set'));
-    photoMapButton.hidden = !state.locations[photo.id]; photoMapButton.textContent = 'Show on Map';
-    location.append(photoMapButton); sidebar.append(location);
+    const address = window.atlasCopy?.address('photo.' + photo.id);
+    if (address) {
+      const location = node('section', 'photo-place');
+      location.append(node('h3', '', 'Location'), node('p', '', address)); sidebar.append(location);
+    }
     const introduction = node('section', 'photo-introduction');
     const descriptions = { 'light-experiments': 'Light, colour, and the traces they leave.', 'river-and-bridges': 'Water, crossings, and the river’s edge.', 'street-observations': 'Small observations from the street.', 'lands': 'A little time in the open air.', 'portraits': 'People, seen through the camera.', 'architecture': 'Built spaces and the lines that hold them.', 'sports': 'Bodies, gestures, and movement.' };
     const caption = node('p', 'photo-caption', photo.description || descriptions[album.id] || ''); caption.dataset.copyId = 'photo.' + photo.id;
@@ -561,7 +406,7 @@
   }
   function stepExpanded(direction) {
     if (!expanded) return;
-    const exhibition = expanded.origin === 'gallery' || expanded.origin === 'map';
+    const exhibition = expanded.origin === 'gallery';
     const index = expanded.index + direction;
     if (exhibition) expanded.index = (index + expanded.images.length) % expanded.images.length;
     else if (index >= 0 && index < expanded.images.length) expanded.index = index;
@@ -572,7 +417,7 @@
     $('photograph-viewer').dataset.section = origin === 'band' ? 'music' : origin === 'entry' ? 'notes' : origin === 'about' ? 'story' : origin === 'places' ? 'places' : 'work';
     $('photograph-viewer').classList.toggle('is-band-view', origin === 'band');
     strips?.setSuspended(true);
-    $('close-photograph').setAttribute('aria-label', origin === 'gallery' ? 'Close photograph and return to Gallery' : origin === 'map' ? 'Close photograph and return to Map' : 'Close photograph');
+    $('close-photograph').setAttribute('aria-label', origin === 'gallery' ? 'Close photograph and return to Gallery' : 'Close photograph');
     drawExpanded(); $('photograph-viewer').showModal(); $('close-photograph').focus();
   }
   function closeExpanded() {
@@ -581,23 +426,12 @@
     const portfolioIndex = photos.findIndex(photo => photo.id === images[index].id);
     $('photograph-viewer').close(); expanded = null;
     if (origin === 'gallery') { state.photo = portfolioIndex; strips?.setSuspended(false); }
-    if (origin === 'map') { state.photo = portfolioIndex; render(); }
     if (origin === 'entry' && state.post) selectEntryImage(data.journal.find(entry => entry.id === state.post), index);
     requestAnimationFrame(() => {
       if (origin === 'entry' && $('journal-post').open) $('journal-post-content').querySelectorAll('.entry-grid-photo')[index]?.focus({ preventScroll: true });
-      else if (origin === 'map' && $('chapter').open) stage.querySelector('.map-selected-photo')?.focus({ preventScroll: true });
       else if ($('chapter').open && returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
     });
   }
-  const photoMapButton = button('Show on Map', 'image-map-link', () => {
-    const index = photos.findIndex(photo => photo.id === expanded.images[expanded.index].id);
-    closeExpanded(); state.photo = index; state.photographyView = 'map';
-    const location = state.locations[photos[index].id];
-    state.reviewOpen = false;
-    if (location) state.mapView = { center: location.coordinates, zoom: location.precision === 'city' ? 10 : 13 };
-    render();
-  });
-  photoMapButton.hidden = true;
   $('close-journal-post').addEventListener('click', closePost);
   $('journal-post').addEventListener('cancel', event => { event.preventDefault(); event.stopPropagation(); closePost(); });
   $('close-photograph').addEventListener('click', closeExpanded);
@@ -613,14 +447,13 @@
     }
   });
   window.atlasReader = {
-    useGallery() { state.photographyView = 'gallery'; },
+    useGallery() { /* Compatibility: Photography now has a single gallery view. */ },
     open(section) {
       const token = ++journalVisit;
       $('chapter').classList.toggle('is-band', section === 'music');
       const supported = ['story', 'work', 'notes', 'music', 'places'].includes(section);
       if (!supported) { saveScroll(); disposeMap(); disposeWall(); disposeJournal(); state.section = section; stage.replaceChildren(); return false; }
       saveScroll(); state.section = section;
-      if (section === 'work' && new URLSearchParams(location.search).get('view') === 'map') state.photographyView = 'map';
       render();
       const query = new URLSearchParams(location.search);
       if (section === 'notes') {

@@ -24,7 +24,6 @@
   const entry=records.get(id);
   const stop=el.closest('[data-stop]')?.dataset.stop;
   if(stop)entry.link='index.html?at='+stop+'#river';
-  if(area==='work'&&el.closest('.photography-map-layout,.map-photo-strip,.map-toolbar-actions'))entry.link='index.html?view=map#work';
   const post=el.closest('#journal-post')?.dataset.entry,photo=el.closest('#photograph-viewer')?.dataset.photo;
   if(post)entry.link='index.html?post='+post+'#notes';else if(photo&&area==='work')entry.link='index.html?photo='+photo+'#work';
   const where=`${area} / ${location}`;if(!entry.locations.includes(where))entry.locations.push(where);

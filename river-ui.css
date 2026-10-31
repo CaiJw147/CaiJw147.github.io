@@ -185,6 +185,12 @@
 .map-visited-area{position:absolute;border:2px solid #5e7852;border-radius:50%;background:#71965d25;box-shadow:inset 0 0 0 3px #dce4b322;pointer-events:none;}
 .map-area-label{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;padding:4px 8px;font:11px/1.5 var(--ui);white-space:nowrap;}
 .map-origin{position:absolute;width:10px;height:10px;border:2px solid #fff1d2;border-radius:50%;background:#965443;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #965443;pointer-events:none;}
+
+/* Natural-ratio Band photographs flow without grid rows stretched by portraits. */
+.band-editorial-grid{display:block;columns:2;column-gap:16px;}
+.band-editorial-photo{display:block;width:100%;margin:0 0 16px;padding:0;border:0;background:transparent;break-inside:avoid;page-break-inside:avoid;}
+.band-editorial-photo img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;}
+@media(max-width:650px){.band-editorial-grid{columns:1;column-gap:0;}.band-editorial-photo{margin-bottom:12px;}}
 .map-origin>span{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);font:700 12px/1.6 var(--ui);white-space:nowrap;color:#754d3e;background:#f5edd4e8;padding:3px 8px;}
 @media(max-width:850px){.place-story{gap:24px;}.places-map{height:350px;min-height:350px;}}
 @media(max-width:650px){.places-map{height:310px;min-height:310px;}.place-photo-pair{gap:9px;}.cycling-metric-value{font-size:27px;}.map-area-label{font-size:10px;padding:3px 6px;}.places-geography-heading h3{max-width:13ch;}}

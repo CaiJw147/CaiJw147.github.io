@@ -1,0 +1,22 @@
+/* A focused entry outside the town: original scene, clear identity, one invitation. */
+#cover{background:radial-gradient(ellipse at 50% 39%,#17343e65 0%,#17343e18 42%,transparent 70%),linear-gradient(180deg,#172f3c25,transparent 58%,#102d3850);}
+.cover-top{top:28px;left:4.5%;right:4.5%;font-size:12px;letter-spacing:.025em;color:#edf0e4;}
+.cover-center{inset:auto;left:50%;top:42%;transform:translate(-50%,-50%);width:min(900px,91vw);text-align:center;}
+#cover-title{font-family:var(--display);font-weight:500;font-size:clamp(54px,7.8vw,112px);line-height:1.12;letter-spacing:-.025em;word-spacing:0;margin:0;white-space:nowrap;color:#fff3da;-webkit-text-stroke:1px #28434b;paint-order:stroke fill;text-shadow:0 3px 0 #1c3540,0 12px 32px #102d3870;}
+.cover-subtitle{margin:22px 0 0;font:400 clamp(18px,1.8vw,25px)/1.4 var(--text);letter-spacing:.16em;text-transform:uppercase;color:#f0e9d4;text-shadow:0 2px 12px #14303f;}
+#cover #play{margin-top:36px;min-width:188px;min-height:61px;padding:14px 25px;border:3px solid #623c32;border-radius:0;color:#fff4df;background:#c66d4e;box-shadow:inset 0 2px 0 #eeaa7f,0 5px 0 #543a32,0 11px 20px #18323c45;font:400 25px/1.1 'Weapon Get 2',var(--ui);text-transform:uppercase;letter-spacing:.03em;transition:background .15s,transform .15s,box-shadow .15s;}
+#cover #play:hover{background:#db805a;transform:translateY(-2px);}
+#cover #play:active{transform:translateY(4px);box-shadow:inset 0 1px 0 #eeaa7f,0 1px 0 #543a32;}
+#cover #play:focus-visible{outline:2px solid #fff4df;outline-offset:8px;}
+#cover #play .play-triangle{display:none;}
+.cover-shortcut{bottom:25px;min-height:44px;padding:10px 16px;font-size:13px;line-height:1.5;color:#f2eddf;background:#1c37433d;text-decoration-color:#d9c49390;}
+@media(max-width:650px){
+ .cover-top{top:22px;left:20px;right:20px;font-size:10px;gap:18px;}.cover-top span:last-child{text-align:right;}
+ .cover-center{top:41%;width:calc(100% - 28px);}
+ #cover-title{font-size:clamp(46px,13vw,64px);text-shadow:0 3px 0 #1c3540,0 8px 20px #102d3860;}
+ .cover-subtitle{font-size:16px;letter-spacing:.1em;margin-top:18px;}
+ #cover #play{min-width:164px;min-height:55px;margin-top:29px;font-size:21px;padding:12px 20px;}
+ .cover-shortcut{bottom:22px;font-size:12px;max-width:calc(100% - 36px);white-space:normal;text-align:center;}
+}
+@media(max-height:600px) and (min-width:651px){.cover-center{top:42%;}#cover-title{font-size:58px;}.cover-subtitle{font-size:17px;margin-top:12px;}#cover #play{margin-top:20px;min-height:50px;font-size:21px;}.cover-top{top:18px;}.cover-shortcut{bottom:12px;}}
+@media(prefers-reduced-motion:reduce){#cover #play{transition:none;}#cover #play:hover,#cover #play:active{transform:none;}}
