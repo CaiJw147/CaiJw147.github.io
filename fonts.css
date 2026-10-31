@@ -9,9 +9,9 @@ button,input,textarea,select,option,summary{font-family:var(--ui);}
 .loading-title{font-family:var(--display);}#loading-screen,.private-review{font-family:var(--ui);}
 .item-title,.item-description,.current-text,.proposal{font-family:var(--text);}.item-id{font-family:var(--ui);}
 
-/* Reading surfaces share the English family; Chinese keeps the original font.
+/* Reading and entry surfaces share the English family; Chinese keeps its font.
    Interface controls and the river's display lettering retain their own roles. */
-:is(#chapter,#journal-post,#photograph-viewer){
+:is(#loading-screen,#cover,#ending,#chapter,#journal-post,#photograph-viewer){
   --display:'Source Serif 4','Atlas Reading',serif;
   --text:var(--display);
   font-family:var(--text);
@@ -26,3 +26,5 @@ button,input,textarea,select,option,summary{font-family:var(--ui);}
   .places-map-note,.cycling-metric-note
 ){font-family:var(--text);}
 #photograph-sidebar h3{font-family:var(--text);}
+#cover .cover-top,#cover .cover-shortcut,#ending .ending-credit{font-family:var(--text);}
+#loading-retry{font-family:var(--ui);}
